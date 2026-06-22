@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Kings & Blades Barbershop — New York</title>
+<meta name="description" content="Premium barbershop in New York. Classic cuts, modern style.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+<script>
+  // Global, offline-safe image fallback. If any photo fails to load (network
+  // blocked, CDN down, etc.) this swaps in a branded inline SVG so nothing
+  // ever shows as a broken image icon.
+  function imgFallback(el, label) {
+    el.onerror = null;
+    const w = el.naturalWidth || el.width || 400;
+    const h = el.naturalHeight || el.height || 400;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${Math.max(w,300)} ${Math.max(h,300)}">
+      <defs>
+        <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1c1c1c"/>
+          <stop offset="100%" stop-color="#0a0a0a"/>
+        </linearGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#g)"/>
+      <text x="50%" y="50%" font-family="Inter, sans-serif" font-size="${Math.max(w,h)*0.045}" fill="#C9A84C" text-anchor="middle" dominant-baseline="middle" opacity="0.85">${label || 'Kings & Blades'}</text>
+    </svg>`;
+    el.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  }
+
+  // Probe the hero background photo; if it can't load, strip the url() so
+  // only the CSS gradient underneath remains (set in the inline style below).
+  (function() {
+    const heroUrl = 'https://picsum.photos/seed/kingsblades-hero/1200/1500';
+    const probe = new Image();
+    probe.onerror = function() {
+      const heroBg = document.querySelector('.hero-bg');
+      if (heroBg) heroBg.style.backgroundImage = 'linear-gradient(160deg, #1a1a1a, #0a0a0a)';
+    };
+    probe.src = heroUrl;
+  })();
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0A0A0A;
+    --dark: #111111;
+    --card: #181818;
+    --gold: #C9A84C;
+    --gold-light: #E8C86A;
+    --white: #F5F5F0;
+    --gray: #888888;
+    --border: rgba(201,168,76,0.25);
+    --radius: 2px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 16px 14px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(15px, 4.6vw, 22px);
+    letter-spacing: clamp(1px, 0.6vw, 3px);
+    color: var(--gold);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  .nav-links {
+    display: none;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* Language Switcher */
+  .lang-switcher {
+    position: relative;
+  }
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 6px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: border-color 0.2s;
+    white-space: nowrap;
+  }
+
+  .lang-btn:hover { border-color: var(--gold); }
+
+  .lang-flag { font-size: 15px; line-height: 1; }
+
+  .lang-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-width: 210px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    z-index: 200;
+  }
+
+  .lang-dropdown.open { display: block; }
+
+  .lang-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.15s;
+    border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    background: transparent;
+    color: var(--white);
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .lang-option:last-child { border-bottom: none; }
+  .lang-option:hover { background: rgba(201,168,76,0.12); }
+  .lang-option.active { color: var(--gold); }
+  .lang-option .lang-flag { font-size: 17px; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 18px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-color: #1a1a1a;
+    background-image: linear-gradient(160deg, #1a1a1a, #0a0a0a), url('https://picsum.photos/seed/kingsblades-hero/1200/1500');
+    background-blend-mode: normal;
+    background-size: cover;
+    background-position: center top;
+    filter: brightness(0.35);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--black) 30%, transparent 70%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 8vw, 64px);
+    line-height: 1;
+    letter-spacing: clamp(1px, 0.8vw, 5px);
+    margin-bottom: 6px;
+    white-space: nowrap;
+  }
+
+  .hero-title-amp {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: clamp(32px, 9vw, 58px);
+    display: block;
+    line-height: 1.2;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  .hero-divider {
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.5;
+    margin: 0 auto 20px;
+  }
+
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(245,245,240,0.6);
+    max-width: 300px;
+    margin: 0 auto 28px;
+    line-height: 1.75;
+    text-align: center;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: var(--black);
+    text-decoration: none;
+    padding: 16px 30px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .hero-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 80px 24px;
+  }
+
+  .section-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 10vw, 58px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+
+  .section-body {
+    font-size: 15px;
+    color: rgba(245,245,240,0.65);
+    line-height: 1.75;
+  }
+
+  /* ── ABOUT ── */
+  .about { background: var(--dark); }
+
+  .about-img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    filter: grayscale(20%);
+  }
+
+  .about-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+
+  .badge {
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border-radius: var(--radius);
+  }
+
+  /* ── SERVICES ── */
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 40px;
+    border: 1px solid var(--border);
+  }
+
+  .service-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .service-item:last-child { border-bottom: none; }
+  .service-item:hover { background: rgba(201,168,76,0.07); }
+
+  .service-info h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .service-info span {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 0.5px;
+  }
+
+  .service-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  /* ── BARBERS ── */
+  .barbers { background: var(--dark); }
+
+  .barbers-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  .barber-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .barber-img {
+    width: 110px;
+    min-width: 110px;
+    height: 130px;
+    object-fit: cover;
+    filter: grayscale(30%);
+  }
+
+  .barber-info {
+    padding: 16px 20px;
+  }
+
+  .barber-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .barber-role {
+    font-size: 11px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .barber-bio {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.5;
+  }
+
+  /* ── GALLERY ── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 32px;
+  }
+
+  .gallery-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    filter: grayscale(25%);
+    transition: filter 0.3s;
+  }
+
+  .gallery-img:hover { filter: grayscale(0%); }
+
+  .gallery-img.tall {
+    aspect-ratio: 1/1.5;
+    grid-row: span 2;
+  }
+
+  /* ── BOOKING ── */
+  .booking {
+    background: var(--gold);
+    color: var(--black);
+    text-align: center;
+  }
+
+  .booking .section-tag { color: var(--black); opacity: 0.6; }
+
+  .booking .section-title { color: var(--black); }
+
+  .booking-body {
+    font-size: 15px;
+    color: rgba(0,0,0,0.65);
+    max-width: 340px;
+    margin: 0 auto 32px;
+  }
+
+  .btn-book {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--black);
+    color: var(--white);
+    text-decoration: none;
+    padding: 18px 32px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    transition: transform 0.15s, background 0.2s;
+  }
+
+  .btn-book:hover { transform: translateY(-2px); background: #1a1a1a; }
+
+  .btn-icon { font-size: 18px; }
+
+  /* ── MAP/CONTACT ── */
+  .contact { background: var(--dark); }
+
+  .contact-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    margin-top: 40px;
+  }
+
+  .contact-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .contact-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .contact-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .contact-value {
+    font-size: 14px;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .map-container {
+    width: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-top: 32px;
+    height: 220px;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .map-placeholder {
+    text-align: center;
+    color: var(--gray);
+  }
+
+  .map-placeholder .map-pin { font-size: 36px; margin-bottom: 8px; }
+  .map-placeholder p { font-size: 13px; }
+
+  .map-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--gold);
+    font-size: 12px;
+    text-decoration: none;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── HOURS ── */
+  .hours-list {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .hours-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    font-size: 14px;
+  }
+
+  .hours-row:last-child { border-bottom: none; }
+
+  .hours-day { color: var(--gray); }
+
+  .hours-time { color: var(--white); font-weight: 500; }
+
+  .hours-closed { color: #555; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--gray);
+    letter-spacing: 1px;
+  }
+
+  .footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .social-link {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .social-link:hover { border-color: var(--gold); background: rgba(201,168,76,0.1); }
+
+  /* ── MOBILE NAV ── */
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.97);
+    z-index: 99;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    letter-spacing: 3px;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .mobile-menu a:hover { color: var(--gold); }
+
+  .menu-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 28px;
+    cursor: pointer;
+  }
+
+  @media (min-width: 768px) {
+    .nav-links { display: flex; }
+    .hamburger { display: none; }
+    .hero { padding: 0 48px 80px; }
+    section { padding: 100px 48px; }
+    .barbers-grid { flex-direction: row; flex-wrap: wrap; }
+    .barber-card { flex: 1 1 calc(50% - 10px); }
+    .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .contact-grid { flex-direction: row; flex-wrap: wrap; }
+    .contact-item { flex: 1 1 40%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="menu-close" onclick="closeMobileMenu()">✕</button>
+  <a href="#about" onclick="closeMobileMenu()" data-i18n="nav_about">About</a>
+  <a href="#services" onclick="closeMobileMenu()" data-i18n="nav_services">Services</a>
+  <a href="#barbers" onclick="closeMobileMenu()" data-i18n="nav_barbers">Barbers</a>
+  <a href="#booking" onclick="closeMobileMenu()" data-i18n="nav_book">Book Now</a>
+  <a href="#contact" onclick="closeMobileMenu()" data-i18n="nav_contact">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Kings & Blades</a>
+  <ul class="nav-links">
+    <li><a href="#about" data-i18n="nav_about">About</a></li>
+    <li><a href="#services" data-i18n="nav_services">Services</a></li>
+    <li><a href="#barbers" data-i18n="nav_barbers">Barbers</a></li>
+    <li><a href="#booking" data-i18n="nav_book">Book Now</a></li>
+    <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <button class="lang-btn" onclick="toggleLang()" id="langBtn">
+        <span class="lang-flag" id="currentFlag">🇺🇸</span>
+        <span id="currentLang">EN</span>
+        <span>▾</span>
+      </button>
+      <div class="lang-dropdown" id="langDropdown">
+        <button class="lang-option active" onclick="setLang('en')"><span class="lang-flag">🇺🇸</span> EN</button>
+        <button class="lang-option" onclick="setLang('es')"><span class="lang-flag">🇪🇸</span> ESPANHA</button>
+        <button class="lang-option" onclick="setLang('pt')"><span class="lang-flag">🇵🇹</span> Português Portugal</button>
+      </div>
+    </div>
+    <button class="hamburger" onclick="openMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow" data-i18n="hero_eyebrow">Est. 2010 · New York City</p>
+    <h1 class="hero-title">KINGS &amp; BLADES</h1>
+    <span class="hero-title-amp" data-i18n="hero_tagline">New York's Finest</span>
+    <div class="hero-divider"></div>
+    <p class="hero-sub" data-i18n="hero_sub">Where precision meets tradition. The finest cuts in the city — one chair at a time.</p>
+    <a href="https://wa.me/12125550190?text=Hi%2C%20I'd%20like%20to%20book%20an%20appointment%20at%20Kings%20%26%20Blades" target="_blank" class="hero-cta">
+      <span>📅</span>
+      <span data-i18n="cta_book">Book Your Seat</span>
+    </a>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">14+</div>
+        <div class="stat-label" data-i18n="stat_years">Years</div>
+      </div>
+      <div>
+        <div class="stat-num">8K+</div>
+        <div class="stat-label" data-i18n="stat_clients">Clients</div>
+      </div>
+      <div>
+        <div class="stat-num">5★</div>
+        <div class="stat-label" data-i18n="stat_rating">Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <p class="section-tag" data-i18n="about_tag">Our Story</p>
+  <h2 class="section-title" data-i18n="about_title">THE CRAFT<br>BEHIND THE CHAIR</h2>
+  <img
+    class="about-img"
+    src="https://picsum.photos/seed/kingsblades-about/800/600"
+    alt="Barber working"
+    loading="lazy"
+    onerror="imgFallback(this, 'Kings &amp; Blades')"
+  >
+  <p class="section-body" data-i18n="about_body">Kings & Blades was born in 2010 in the heart of Manhattan, where old-school technique meets New York's relentless energy. We built this shop with one belief: a great haircut changes how you carry yourself through the world.<br><br>Every barber here trains for years before touching your head. We use only premium products, keep our tools sharp, and treat every client like the only one in the room.</p>
+  <div class="about-badges">
+    <span class="badge" data-i18n="badge_premium">Premium Cuts</span>
+    <span class="badge" data-i18n="badge_classic">Classic Shaves</span>
+    <span class="badge" data-i18n="badge_beard">Beard Styling</span>
+    <span class="badge" data-i18n="badge_kids">Kids Cuts</span>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <p class="section-tag" data-i18n="services_tag">Menu</p>
+  <h2 class="section-title" data-i18n="services_title">WHAT WE DO</h2>
+  <div class="services-grid">
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc1_name">Signature Cut</h3>
+        <span data-i18n="svc1_time">45 min · Wash & Style</span>
+      </div>
+      <div class="service-price">$55</div>
+    </div>
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc2_name">Classic Shave</h3>
+        <span data-i18n="svc2_time">30 min · Hot Towel</span>
+      </div>
+      <div class="service-price">$38</div>
+    </div>
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc3_name">Cut + Shave Combo</h3>
+        <span data-i18n="svc3_time">75 min · Full Service</span>
+      </div>
+      <div class="service-price">$80</div>
+    </div>
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc4_name">Beard Lineup</h3>
+        <span data-i18n="svc4_time">20 min</span>
+      </div>
+      <div class="service-price">$28</div>
+    </div>
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc5_name">Kids Cut</h3>
+        <span data-i18n="svc5_time">30 min · Under 12</span>
+      </div>
+      <div class="service-price">$32</div>
+    </div>
+    <div class="service-item">
+      <div class="service-info">
+        <h3 data-i18n="svc6_name">Scalp Treatment</h3>
+        <span data-i18n="svc6_time">20 min · Add-on</span>
+      </div>
+      <div class="service-price">$22</div>
+    </div>
+  </div>
+</section>
+
+<!-- BARBERS -->
+<section class="barbers" id="barbers">
+  <p class="section-tag" data-i18n="barbers_tag">The Team</p>
+  <h2 class="section-title" data-i18n="barbers_title">MEET THE<br>BARBERS</h2>
+  <div class="barbers-grid">
+    <div class="barber-card">
+      <img class="barber-img" src="https://picsum.photos/seed/marcus-reed/300/360" alt="Marcus Reed" loading="lazy" onerror="imgFallback(this, 'Marcus Reed')">
+      <div class="barber-info">
+        <div class="barber-name">Marcus Reed</div>
+        <div class="barber-role" data-i18n="barber_founder">Founder & Master Barber</div>
+        <p class="barber-bio" data-i18n="barber1_bio">18 years behind the chair. Brooklyn-raised, precision-obsessed.</p>
+      </div>
+    </div>
+    <div class="barber-card">
+      <img class="barber-img" src="https://picsum.photos/seed/darius-cole/300/360" alt="Darius Cole" loading="lazy" onerror="imgFallback(this, 'Darius Cole')">
+      <div class="barber-info">
+        <div class="barber-name">Darius Cole</div>
+        <div class="barber-role" data-i18n="barber_senior">Senior Barber</div>
+        <p class="barber-bio" data-i18n="barber2_bio">Fade specialist with a following. Clean lines, every time.</p>
+      </div>
+    </div>
+    <div class="barber-card">
+      <img class="barber-img" src="https://picsum.photos/seed/tony-vega/300/360" alt="Tony Vega" loading="lazy" onerror="imgFallback(this, 'Tony Vega')">
+      <div class="barber-info">
+        <div class="barber-name">Tony Vega</div>
+        <div class="barber-role" data-i18n="barber_shave">Shave & Beard Expert</div>
+        <p class="barber-bio" data-i18n="barber3_bio">Old-school technique, modern edge. Straight razor artist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <p class="section-tag" data-i18n="gallery_tag">Gallery</p>
+  <h2 class="section-title" data-i18n="gallery_title">THE WORK</h2>
+  <div class="gallery-grid">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut1/500/500" alt="Cut 1" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut2/500/500" alt="Cut 2" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut3/500/500" alt="Cut 3" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut4/500/500" alt="Cut 4" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut5/500/500" alt="Cut 5" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+    <img class="gallery-img" src="https://picsum.photos/seed/kb-cut6/500/500" alt="Cut 6" loading="lazy" onerror="imgFallback(this, 'Kings & Blades')">
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="booking">
+  <p class="section-tag" data-i18n="book_tag">Reserve Your Spot</p>
+  <h2 class="section-title" data-i18n="book_title">READY FOR<br>YOUR BEST CUT?</h2>
+  <p class="booking-body" data-i18n="book_body">Send us a message on WhatsApp and we'll confirm your appointment within minutes.</p>
+  <a href="https://wa.me/12125550190?text=Hi%2C%20I'd%20like%20to%20book%20an%20appointment%20at%20Kings%20%26%20Blades" target="_blank" class="btn-book">
+    <span class="btn-icon">💬</span>
+    <span data-i18n="btn_whatsapp">Book via WhatsApp</span>
+  </a>
+</section>
+
+<!-- CONTACT + HOURS -->
+<section class="contact" id="contact">
+  <p class="section-tag" data-i18n="contact_tag">Find Us</p>
+  <h2 class="section-title" data-i18n="contact_title">LOCATION &<br>HOURS</h2>
+  <div class="contact-grid">
+    <div class="contact-item">
+      <div class="contact-icon">📍</div>
+      <div>
+        <div class="contact-label" data-i18n="label_address">Address</div>
+        <div class="contact-value">347 W 36th St, Suite 2B<br>New York, NY 10018</div>
+      </div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">📞</div>
+      <div>
+        <div class="contact-label" data-i18n="label_phone">Phone</div>
+        <div class="contact-value">+1 (212) 555-0190</div>
+      </div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">📧</div>
+      <div>
+        <div class="contact-label" data-i18n="label_email">Email</div>
+        <div class="contact-value">hello@kingsandblades.com</div>
+      </div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-icon">📱</div>
+      <div>
+        <div class="contact-label">WhatsApp</div>
+        <div class="contact-value">+1 (212) 555-0190</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-container">
+    <div class="map-placeholder">
+      <div class="map-pin">📍</div>
+      <p>347 W 36th St, New York, NY</p>
+      <a href="https://maps.google.com/?q=347+W+36th+St+New+York+NY" target="_blank" class="map-link" data-i18n="map_link">Open in Google Maps →</a>
+    </div>
+  </div>
+
+  <div class="hours-list">
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_mon">Monday</span>
+      <span class="hours-time">9:00 AM – 8:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_tue">Tuesday</span>
+      <span class="hours-time">9:00 AM – 8:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_wed">Wednesday</span>
+      <span class="hours-time">9:00 AM – 8:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_thu">Thursday</span>
+      <span class="hours-time">9:00 AM – 9:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_fri">Friday</span>
+      <span class="hours-time">9:00 AM – 9:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_sat">Saturday</span>
+      <span class="hours-time">8:00 AM – 8:00 PM</span>
+    </div>
+    <div class="hours-row">
+      <span class="hours-day" data-i18n="day_sun">Sunday</span>
+      <span class="hours-closed" data-i18n="day_closed">Closed</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Kings & Blades</div>
+  <div class="footer-social">
+    <a class="social-link" href="#" aria-label="Instagram">📸</a>
+    <a class="social-link" href="#" aria-label="Facebook">📘</a>
+    <a class="social-link" href="https://wa.me/12125550190" aria-label="WhatsApp">💬</a>
+  </div>
+  <p class="footer-copy">© 2025 Kings & Blades Barbershop. New York City.</p>
+</footer>
+
+<script>
+// ── TRANSLATIONS ──
+const translations = {
+  en: {
+    nav_about: "About", nav_services: "Services", nav_barbers: "Barbers", nav_book: "Book Now", nav_contact: "Contact",
+    hero_eyebrow: "Est. 2010 · New York City",
+    hero_tagline: "New York's Finest",
+    hero_sub: "Where precision meets tradition. The finest cuts in the city — one chair at a time.",
+    cta_book: "Book Your Seat",
+    stat_years: "Years", stat_clients: "Clients", stat_rating: "Rating",
+    about_tag: "Our Story", about_title: "THE CRAFT\nBEHIND THE CHAIR",
+    about_body: "Kings & Blades was born in 2010 in the heart of Manhattan, where old-school technique meets New York's relentless energy. We built this shop with one belief: a great haircut changes how you carry yourself through the world.<br><br>Every barber here trains for years before touching your head. We use only premium products, keep our tools sharp, and treat every client like the only one in the room.",
+    badge_premium: "Premium Cuts", badge_classic: "Classic Shaves", badge_beard: "Beard Styling", badge_kids: "Kids Cuts",
+    services_tag: "Menu", services_title: "WHAT WE DO",
+    svc1_name: "Signature Cut", svc1_time: "45 min · Wash & Style",
+    svc2_name: "Classic Shave", svc2_time: "30 min · Hot Towel",
+    svc3_name: "Cut + Shave Combo", svc3_time: "75 min · Full Service",
+    svc4_name: "Beard Lineup", svc4_time: "20 min",
+    svc5_name: "Kids Cut", svc5_time: "30 min · Under 12",
+    svc6_name: "Scalp Treatment", svc6_time: "20 min · Add-on",
+    barbers_tag: "The Team", barbers_title: "MEET THE\nBARBERS",
+    barber_founder: "Founder & Master Barber", barber_senior: "Senior Barber", barber_shave: "Shave & Beard Expert",
+    barber1_bio: "18 years behind the chair. Brooklyn-raised, precision-obsessed.",
+    barber2_bio: "Fade specialist with a following. Clean lines, every time.",
+    barber3_bio: "Old-school technique, modern edge. Straight razor artist.",
+    gallery_tag: "Gallery", gallery_title: "THE WORK",
+    book_tag: "Reserve Your Spot", book_title: "READY FOR\nYOUR BEST CUT?",
+    book_body: "Send us a message on WhatsApp and we'll confirm your appointment within minutes.",
+    btn_whatsapp: "Book via WhatsApp",
+    contact_tag: "Find Us", contact_title: "LOCATION &\nHOURS",
+    label_address: "Address", label_phone: "Phone", label_email: "Email",
+    map_link: "Open in Google Maps →",
+    day_mon: "Monday", day_tue: "Tuesday", day_wed: "Wednesday", day_thu: "Thursday",
+    day_fri: "Friday", day_sat: "Saturday", day_sun: "Sunday", day_closed: "Closed"
+  },
+  es: {
+    nav_about: "Nosotros", nav_services: "Servicios", nav_barbers: "Barberos", nav_book: "Reservar", nav_contact: "Contacto",
+    hero_eyebrow: "Est. 2010 · Nueva York",
+    hero_tagline: "Lo Mejor de Nueva York",
+    hero_sub: "Donde la precisión se une con la tradición. Los mejores cortes de la ciudad.",
+    cta_book: "Reserva tu Turno",
+    stat_years: "Años", stat_clients: "Clientes", stat_rating: "Valoración",
+    about_tag: "Nuestra Historia", about_title: "EL ARTE\nDETRÁS DE LA SILLA",
+    about_body: "Kings & Blades nació en 2010 en el corazón de Manhattan, donde la técnica clásica se fusiona con la energía de Nueva York. Construimos esta barbería con una convicción: un gran corte cambia cómo te mueves por el mundo.<br><br>Cada barbero se forma durante años antes de tocar tu cabello. Usamos solo productos premium y tratamos a cada cliente como si fuera el único en la sala.",
+    badge_premium: "Cortes Premium", badge_classic: "Afeitado Clásico", badge_beard: "Barba", badge_kids: "Niños",
+    services_tag: "Menú", services_title: "LO QUE HACEMOS",
+    svc1_name: "Corte Signature", svc1_time: "45 min · Lavado e Peinado",
+    svc2_name: "Afeitado Clásico", svc2_time: "30 min · Toalla Caliente",
+    svc3_name: "Combo Corte + Afeitado", svc3_time: "75 min · Servicio Completo",
+    svc4_name: "Perfilado de Barba", svc4_time: "20 min",
+    svc5_name: "Corte Infantil", svc5_time: "30 min · Menores de 12",
+    svc6_name: "Tratamiento Capilar", svc6_time: "20 min · Adicional",
+    barbers_tag: "El Equipo", barbers_title: "CONOCE A\nNUESTROS BARBEROS",
+    barber_founder: "Fundador y Maestro Barbero", barber_senior: "Barbero Senior", barber_shave: "Experto en Afeitado y Barba",
+    barber1_bio: "18 años en la silla. Criado en Brooklyn, obsesionado con la precisión.",
+    barber2_bio: "Especialista en degradados. Líneas limpias, siempre.",
+    barber3_bio: "Técnica clásica, filo moderno. Artista de la navaja.",
+    gallery_tag: "Galería", gallery_title: "EL TRABAJO",
+    book_tag: "Reserva tu Turno", book_title: "¿LISTO PARA\nTU MEJOR CORTE?",
+    book_body: "Envíanos un mensaje por WhatsApp y confirmaremos tu cita en minutos.",
+    btn_whatsapp: "Reservar por WhatsApp",
+    contact_tag: "Encuéntranos", contact_title: "UBICACIÓN\nY HORARIO",
+    label_address: "Dirección", label_phone: "Teléfono", label_email: "Correo",
+    map_link: "Abrir en Google Maps →",
+    day_mon: "Lunes", day_tue: "Martes", day_wed: "Miércoles", day_thu: "Jueves",
+    day_fri: "Viernes", day_sat: "Sábado", day_sun: "Domingo", day_closed: "Cerrado"
+  },
+  pt: {
+    nav_about: "Sobre", nav_services: "Serviços", nav_barbers: "Barbeiros", nav_book: "Agendar", nav_contact: "Contacto",
+    hero_eyebrow: "Est. 2010 · Nova Iorque",
+    hero_tagline: "O Melhor de Nova Iorque",
+    hero_sub: "Onde a precisão encontra a tradição. Os melhores cortes da cidade.",
+    cta_book: "Reservar Lugar",
+    stat_years: "Anos", stat_clients: "Clientes", stat_rating: "Avaliação",
+    about_tag: "A Nossa História", about_title: "A ARTE POR\nTRÁS DA CADEIRA",
+    about_body: "A Kings & Blades nasceu em 2010 no coração de Manhattan, onde a técnica clássica se encontra com a energia imparável de Nova Iorque. Construímos esta barbearia com uma convicção: um bom corte muda a forma como te apresentas ao mundo.<br><br>Cada barbeiro treina durante anos antes de tocar no teu cabelo. Usamos apenas produtos premium e tratamos cada cliente como se fosse o único na sala.",
+    badge_premium: "Cortes Premium", badge_classic: "Barbear Clássico", badge_beard: "Barba", badge_kids: "Crianças",
+    services_tag: "Menu", services_title: "O QUE FAZEMOS",
+    svc1_name: "Corte Signature", svc1_time: "45 min · Lavagem e Penteado",
+    svc2_name: "Barbear Clássico", svc2_time: "30 min · Toalha Quente",
+    svc3_name: "Corte + Barba Combo", svc3_time: "75 min · Serviço Completo",
+    svc4_name: "Perfil de Barba", svc4_time: "20 min",
+    svc5_name: "Corte Infantil", svc5_time: "30 min · Menores de 12",
+    svc6_name: "Tratamento Capilar", svc6_time: "20 min · Adicional",
+    barbers_tag: "A Equipa", barbers_title: "CONHECE OS\nBARBEIROS",
+    barber_founder: "Fundador e Mestre Barbeiro", barber_senior: "Barbeiro Sénior", barber_shave: "Especialista em Barba",
+    barber1_bio: "18 anos na cadeira. De Brooklyn, obcecado com precisão.",
+    barber2_bio: "Especialista em degradé. Linhas limpas, sempre.",
+    barber3_bio: "Técnica clássica, fio moderno. Artista da navalha.",
+    gallery_tag: "Galeria", gallery_title: "O NOSSO TRABALHO",
+    book_tag: "Reserva o teu Lugar", book_title: "PRONTO PARA\nO MELHOR CORTE?",
+    book_body: "Envia-nos uma mensagem no WhatsApp e confirmamos o agendamento em minutos.",
+    btn_whatsapp: "Agendar via WhatsApp",
+    contact_tag: "Encontra-nos", contact_title: "LOCALIZAÇÃO\nE HORÁRIOS",
+    label_address: "Morada", label_phone: "Telefone", label_email: "Email",
+    map_link: "Abrir no Google Maps →",
+    day_mon: "Segunda", day_tue: "Terça", day_wed: "Quarta", day_thu: "Quinta",
+    day_fri: "Sexta", day_sat: "Sábado", day_sun: "Domingo", day_closed: "Fechado"
+  }
+};
+
+const langConfig = {
+  en: { flag: '🇺🇸', label: 'EN' },
+  es: { flag: '🇪🇸', label: 'ES' },
+  pt: { flag: '🇵🇹', label: 'PT' }
+};
+
+let currentLangCode = 'en';
+
+function setLang(lang) {
+  currentLangCode = lang;
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) {
+      el.innerHTML = t[key];
+    }
+  });
+  document.getElementById('currentFlag').textContent = langConfig[lang].flag;
+  document.getElementById('currentLang').textContent = langConfig[lang].label;
+  document.querySelectorAll('.lang-option').forEach((btn, i) => {
+    btn.classList.toggle('active', ['en','es','pt'][i] === lang);
+  });
+  closeLang();
+}
+
+function toggleLang() {
+  document.getElementById('langDropdown').classList.toggle('open');
+}
+
+function closeLang() {
+  document.getElementById('langDropdown').classList.remove('open');
+}
+
+function openMobileMenu() {
+  document.getElementById('mobileMenu').classList.add('open');
+}
+
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  const switcher = document.querySelector('.lang-switcher');
+  if (switcher && !switcher.contains(e.target)) closeLang();
+});
+</script>
+</body>
+</html>
